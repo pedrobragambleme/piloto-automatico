@@ -11,8 +11,8 @@ Informe o nome provisório do jogo.
 Nome: Piloto Automático
 
 2. Integrantes do grupo
-Nome 1: [Pedro Braga Morgan Bleme - 935798]
-Nome 2: [Matheus Fernandes de Oliveira - 932354]
+Nome 1: Pedro Braga Morgan Bleme - 935798
+Nome 2: Matheus Fernandes de Oliveira - 932354
 
 3. Tema escolhido
 
