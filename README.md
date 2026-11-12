@@ -1,70 +1,57 @@
-# Nome do Jogo
+# Piloto Automático
 
 Projeto final da disciplina de Introdução a Algoritmos/Programação, desenvolvido com Python e Pygame.
 
-Este repositório é um template para os grupos da disciplina. A proposta é começar com uma base funcional e evoluir o jogo ao longo do semestre.
+Jogo sobre **IA no cotidiano e uso responsável**, com foco em mobilidade inteligente: você acompanha um carro autônomo e precisa decidir quando confiar no piloto automático e quando assumir o controle.
+
+> Status: em desenvolvimento (Ponto de controle 01 – proposta definida em `docs/proposta.md`).
 
 ## Integrantes do grupo
 
-- Nome do integrante 1
-- Nome do integrante 2
-- Nome do integrante 3
-- Nome do integrante 4
+* [Pedro Braga Morgan Bleme - 935798]
+* [Matheus Fernandes de Oliveira - 932354]
 
 ## Estrutura do projeto
 
-- `main.py`: ponto de entrada da aplicação.
-- `src/`: código-fonte principal do jogo (loop, regras, sprites e dados).
-- `assets/`: imagens, fontes e sons.
-- `data/`: arquivos persistentes (recorde/ranking).
-- `tests/`: testes unitários com `pytest`.
-- `docs/`: documentação do projeto, incluindo proposta inicial.
+* `main.py`: ponto de entrada da aplicação.
+* `src/`: código-fonte principal do jogo (loop, regras, sprites e dados).
+* `assets/`: imagens, fontes e sons.
+* `data/`: arquivos persistentes (recorde/ranking e cenários).
+* `tests/`: testes unitários com `pytest`.
+* `docs/`: documentação do projeto, incluindo proposta inicial.
 
 ## Descrição do jogo
 
-Descreva brevemente a ideia principal do jogo.
-
-Exemplo:
-
-> O jogo consiste em controlar um personagem que deve coletar moedas e evitar obstáculos. O jogador ganha pontos ao coletar itens e perde vidas ao colidir com obstáculos. A partida termina quando o tempo acaba ou quando o jogador perde todas as vidas.
+O carro anda sozinho por uma pista de três faixas, com obstáculos descendo. O piloto automático desvia de alguns obstáculos, mas não enxerga outros (neblina, placa apagada, carga na pista). Um painel mostra a confiança da IA e o motivo, mas a confiança nem sempre é confiável. O jogador precisa observar o contexto e decidir quando deixar a IA dirigir e quando assumir o controle manual. Quando erra, o jogo mostra uma explicação curta do que aconteceu.
 
 ## Objetivo do jogador
 
-Explique o que o jogador precisa fazer para vencer ou avançar no jogo.
-
-Exemplo:
-
-> O objetivo é coletar a maior quantidade possível de itens antes que o tempo acabe, evitando colisões com os obstáculos.
+Percorrer 1000 metros sem perder todas as vidas, intervindo nos momentos certos e deixando a IA dirigir quando for seguro, para fazer a maior pontuação possível.
 
 ## Regras do jogo
 
-Liste as principais regras do jogo.
-
-Exemplo:
-
-- O jogador se movimenta usando as setas do teclado.
-- Cada item coletado aumenta a pontuação.
-- Colidir com um obstáculo reduz a quantidade de vidas.
-- A partida termina quando o jogador perde todas as vidas ou quando o tempo acaba.
+* O jogador começa com 3 vidas e cada colisão retira 1 vida.
+* No modo automático, a IA desvia dos obstáculos que detecta, mas colide com os que não detecta.
+* No modo manual, o jogador troca de faixa com as setas e pode desviar de qualquer obstáculo, mas ganha menos pontos por metro.
+* Desviar manualmente de um obstáculo que a IA não veria dá bônus de pontos; assumir o controle sem necessidade tira pontos.
+* A cada 250 metros o nível sobe, aumentando a velocidade e as condições difíceis (chuva, neblina, noite).
+* Vitória: completar 1000 metros com pelo menos 1 vida. Derrota: perder as 3 vidas.
 
 ## Controles
 
-Informe as teclas ou comandos utilizados no jogo.
-
-Exemplo:
-
-- Seta para cima: mover para cima
-- Seta para baixo: mover para baixo
-- Seta para esquerda: mover para esquerda
-- Seta para direita: mover para direita
-- Espaço: realizar ação
-- ESC: sair do jogo
+* Seta para esquerda: mudar para a faixa da esquerda (modo manual)
+* Seta para direita: mudar para a faixa da direita (modo manual)
+* Espaço: alternar entre modo automático e manual
+* P: pausar
+* Enter: iniciar
+* R: reiniciar
+* ESC: sair do jogo
 
 ## Como executar o projeto
 
-### 1. Clonar o repositório
+1. Clonar o repositório
 
-```bash
+```
 git clone LINK_DO_REPOSITORIO
 cd NOME_DA_PASTA
 pip install -r requirements.txt
@@ -73,19 +60,23 @@ python main.py
 
 ## Como executar os testes
 
-```bash
+```
 python -m pytest
 ```
 
+## Recursos externos utilizados
+
+Nenhum até o momento. Qualquer imagem, som, fonte, trecho de código ou tutorial usado será listado aqui com origem e, quando possível, licença.
+
 ## Checklist mínimo para entrega
 
-- Preencher este README com nome final, descrição real, regras e controles do jogo.
-- Atualizar `docs/proposta.MD` com a proposta do grupo.
-- Garantir que o jogo executa com `python main.py`.
-- Garantir que os testes passam com `pytest`.
+* [ ] Preencher este README com nome final, descrição real, regras e controles do jogo.
+* [x] Atualizar `docs/proposta.md` com a proposta do grupo.
+* [ ] Garantir que o jogo executa com `python main.py`.
+* [ ] Garantir que os testes passam com `pytest`.
 
 ## Observações para os alunos
 
-- Mantenham o código organizado em módulos pequenos e com responsabilidade clara.
-- Comentem partes importantes da lógica, principalmente regras do jogo.
-- Registrem decisões técnicas no README do grupo ao longo do desenvolvimento.
+* Mantenham o código organizado em módulos pequenos e com responsabilidade clara.
+* Comentem partes importantes da lógica, principalmente regras do jogo.
+* Registrem decisões técnicas no README do grupo ao longo do desenvolvimento.
