@@ -8,8 +8,8 @@ Jogo sobre **IA no cotidiano e uso responsável**, com foco em mobilidade inteli
 
 ## Integrantes do grupo
 
-* [Pedro Braga Morgan Bleme - 935798]
-* [Matheus Fernandes de Oliveira - 932354]
+* Pedro Braga Morgan Bleme - 935798
+* Matheus Fernandes de Oliveira - 932354
 
 ## Estrutura do projeto
 
