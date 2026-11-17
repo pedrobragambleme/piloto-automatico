@@ -1,0 +1,167 @@
+[
+  {
+    "id": "cone_normal",
+    "nome": "Cone na pista",
+    "forma": "cone",
+    "cor": [255, 140, 0],
+    "condicao": "normal",
+    "ia_detecta": true,
+    "confianca": 96,
+    "motivo": "Obstáculo identificado: cone",
+    "explicacao": "Cone bem visível em boas condições: a IA reconhece e desvia sozinha."
+  },
+  {
+    "id": "carro_parado_normal",
+    "nome": "Carro parado",
+    "forma": "carro",
+    "cor": [70, 130, 220],
+    "condicao": "normal",
+    "ia_detecta": true,
+    "confianca": 94,
+    "motivo": "Veículo parado identificado",
+    "explicacao": "Veículo parado em pista iluminada: a IA reconhece bem esse padrão."
+  },
+  {
+    "id": "pedestre_normal",
+    "nome": "Pedestre",
+    "forma": "pessoa",
+    "cor": [235, 235, 120],
+    "condicao": "normal",
+    "ia_detecta": true,
+    "confianca": 93,
+    "motivo": "Pedestre identificado",
+    "explicacao": "Pedestre com roupa clara em boa visibilidade: detecção confiável."
+  },
+  {
+    "id": "placa_apagada_normal",
+    "nome": "Placa apagada caída",
+    "forma": "placa",
+    "cor": [150, 150, 150],
+    "condicao": "normal",
+    "ia_detecta": false,
+    "confianca": 91,
+    "motivo": "Pista livre",
+    "explicacao": "A placa caída estava desbotada e sem contraste. A IA classificou como pista livre com 91% de confiança. Confiança alta não garante acerto."
+  },
+  {
+    "id": "pedestre_escuro_chuva",
+    "nome": "Pedestre de roupa escura",
+    "forma": "pessoa",
+    "cor": [45, 45, 70],
+    "condicao": "chuva",
+    "ia_detecta": false,
+    "confianca": 88,
+    "motivo": "Pista livre",
+    "explicacao": "Na chuva, a roupa escura se confunde com o asfalto molhado. A IA não detectou o pedestre e seguiu em frente com alta confiança."
+  },
+  {
+    "id": "cone_chuva",
+    "nome": "Cone refletivo",
+    "forma": "cone",
+    "cor": [255, 120, 0],
+    "condicao": "chuva",
+    "ia_detecta": true,
+    "confianca": 78,
+    "motivo": "Chuva reduz a visibilidade, cone identificado",
+    "explicacao": "O cone refletivo ainda aparece bem para os sensores, mesmo na chuva."
+  },
+  {
+    "id": "carro_alerta_chuva",
+    "nome": "Carro com pisca-alerta",
+    "forma": "carro",
+    "cor": [210, 70, 70],
+    "condicao": "chuva",
+    "ia_detecta": true,
+    "confianca": 72,
+    "motivo": "Chuva forte: veículo identificado com pouca certeza",
+    "explicacao": "As luzes do pisca-alerta ajudam a IA a perceber o veículo parado."
+  },
+  {
+    "id": "caixa_chuva",
+    "nome": "Caixa de papelão molhada",
+    "forma": "caixa",
+    "cor": [140, 105, 70],
+    "condicao": "chuva",
+    "ia_detecta": false,
+    "confianca": 52,
+    "motivo": "Chuva forte: visibilidade baixa",
+    "explicacao": "A IA confundiu a caixa molhada com uma mancha na pista. Em dúvida, o sistema deveria avisar o motorista, mas seguiu em frente."
+  },
+  {
+    "id": "carga_neblina",
+    "nome": "Carga caída",
+    "forma": "caixa",
+    "cor": [165, 120, 70],
+    "condicao": "neblina",
+    "ia_detecta": false,
+    "confianca": 55,
+    "motivo": "Neblina: visibilidade baixa",
+    "explicacao": "Na neblina, a câmera enxerga pouco contraste e a carga caída foi tratada como parte da pista."
+  },
+  {
+    "id": "carro_cinza_neblina",
+    "nome": "Carro cinza parado",
+    "forma": "carro",
+    "cor": [150, 155, 160],
+    "condicao": "neblina",
+    "ia_detecta": false,
+    "confianca": 90,
+    "motivo": "Pista livre",
+    "explicacao": "O carro cinza se misturou à neblina e não foi detectado. A IA ficou confiante porque nada apareceu na imagem, mas não ver não é o mesmo que não haver perigo."
+  },
+  {
+    "id": "cone_neblina",
+    "nome": "Cone refletivo",
+    "forma": "cone",
+    "cor": [255, 130, 0],
+    "condicao": "neblina",
+    "ia_detecta": true,
+    "confianca": 70,
+    "motivo": "Neblina: cone refletivo identificado",
+    "explicacao": "A faixa refletiva do cone aparece mesmo com neblina."
+  },
+  {
+    "id": "carro_sem_luz_noite",
+    "nome": "Carro parado sem luzes",
+    "forma": "carro",
+    "cor": [35, 38, 50],
+    "condicao": "noite",
+    "ia_detecta": false,
+    "confianca": 85,
+    "motivo": "Pista livre",
+    "explicacao": "À noite, um carro escuro e sem luzes quase não reflete luz. A IA não detectou o veículo, mesmo com 85% de confiança."
+  },
+  {
+    "id": "animal_noite",
+    "nome": "Animal na pista",
+    "forma": "animal",
+    "cor": [120, 85, 55],
+    "condicao": "noite",
+    "ia_detecta": false,
+    "confianca": 48,
+    "motivo": "Pouca luz: objeto não classificado",
+    "explicacao": "Animais são situações raras nos dados de treino. Com pouca luz, a IA não soube classificar o objeto e não desviou."
+  },
+  {
+    "id": "cone_noite",
+    "nome": "Cone refletivo",
+    "forma": "cone",
+    "cor": [255, 140, 0],
+    "condicao": "noite",
+    "ia_detecta": true,
+    "confianca": 90,
+    "motivo": "Cone refletivo identificado",
+    "explicacao": "O cone reflete a luz dos faróis, por isso a IA o enxerga bem à noite."
+  },
+  {
+    "id": "pedestre_colete_noite",
+    "nome": "Pedestre com colete",
+    "forma": "pessoa",
+    "cor": [200, 240, 80],
+    "condicao": "noite",
+    "ia_detecta": true,
+    "confianca": 84,
+    "motivo": "Pedestre com colete refletivo identificado",
+    "explicacao": "O colete refletivo torna o pedestre visível para a IA durante a noite."
+  }
+]
