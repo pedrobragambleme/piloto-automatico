@@ -10,7 +10,7 @@ Jogo sobre **IA no cotidiano e uso responsável**, com foco em mobilidade inteli
 
 * Pedro Braga Morgan Bleme - 935798
 * Matheus Fernandes de Oliveira - 932354
-* Thiago Lorenzo - 
+* Thiago Lorenzo - 878677
 
 ## Estrutura do projeto
 
