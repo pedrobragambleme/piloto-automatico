@@ -4,7 +4,7 @@ Esta pasta concentra documentos de planejamento e apoio ao projeto.
 
 ## Arquivos
 
-- `proposta.MD`: proposta inicial do jogo para preenchimento do grupo.
+- `proposta.MD`: proposta do jogo Piloto Automático (atualizada na Entrega 2).
 
 ## Sugestoes de uso
 
