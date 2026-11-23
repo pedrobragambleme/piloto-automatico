@@ -4,19 +4,27 @@ Projeto final da disciplina de Introdução a Algoritmos/Programação, desenvol
 
 Jogo sobre **IA no cotidiano e uso responsável**, com foco em mobilidade inteligente: você acompanha um carro autônomo e precisa decidir quando confiar no piloto automático e quando assumir o controle.
 
-> Status: em desenvolvimento (Ponto de controle 01 – proposta definida em `docs/proposta.md`).
+> Status: versão parcial jogável (Entrega 2). Proposta em `docs/proposta.MD`.
 
 ## Integrantes do grupo
 
 * Pedro Braga Morgan Bleme - 935798
 * Matheus Fernandes de Oliveira - 932354
+* Thiago Lorenzo - 
 
 ## Estrutura do projeto
 
 * `main.py`: ponto de entrada da aplicação.
-* `src/`: código-fonte principal do jogo (loop, regras, sprites e dados).
+* `src/`: código-fonte principal do jogo:
+  * `jogo.py`: loop principal, teclado e telas (menu, jogo, pausa, fim);
+  * `partida.py`: estado da partida e regras a cada quadro;
+  * `funcoes.py`: funções puras de lógica (colisão, pontos, nível, fim de jogo, piloto automático);
+  * `obstaculos.py`: criação e consulta de obstáculos;
+  * `interface.py`: desenho da pista, do painel e das telas;
+  * `dados.py`: leitura/escrita do recorde e leitura dos cenários;
+  * `config.py`: constantes do jogo.
 * `assets/`: imagens, fontes e sons.
-* `data/`: arquivos persistentes (recorde/ranking e cenários).
+* `data/`: arquivos persistentes (`recorde.txt` e `cenarios.json`, com os obstáculos e suas explicações).
 * `tests/`: testes unitários com `pytest`.
 * `docs/`: documentação do projeto, incluindo proposta inicial.
 
@@ -47,16 +55,26 @@ Percorrer 1000 metros sem perder todas as vidas, intervindo nos momentos certos 
 * R: reiniciar
 * ESC: sair do jogo
 
+## Como o jogo funciona
+
+* O carro anda sozinho. O painel mostra a **leitura da IA** (o que ela acha que está à frente e a confiança em %), mas a confiança nem sempre é confiável: em alguns casos a IA está muito confiante e não viu o obstáculo.
+* A **condição da pista** (normal, chuva, neblina ou noite) muda a cada 100 m e define quais obstáculos aparecem. Quanto pior a visibilidade, mais a IA falha.
+* No **modo automático** vale 1 ponto por metro; no **manual**, 0,5. Intervir quando a IA falharia dá **+20**; intervir quando ela já detectava o obstáculo custa **-10**.
+* Depois de cada batida, o jogo explica por que a IA errou. O nível sobe a cada 250 m (mais velocidade e mais condições difíceis).
+* O recorde é salvo em `data/recorde.txt`.
+
 ## Como executar o projeto
 
 1. Clonar o repositório
 
 ```
-git clone LINK_DO_REPOSITORIO
-cd NOME_DA_PASTA
+git clone https://github.com/pedrobragambleme/piloto-automatico.git
+cd piloto-automatico
 pip install -r requirements.txt
 python main.py
 ```
+
+Execute sempre a partir da pasta raiz do projeto, pois os arquivos de `data/` são lidos por caminho relativo.
 
 ## Como executar os testes
 
@@ -66,11 +84,13 @@ python -m pytest
 
 ## Recursos externos utilizados
 
-Nenhum até o momento. Qualquer imagem, som, fonte, trecho de código ou tutorial usado será listado aqui com origem e, quando possível, licença.
+Nenhum até o momento. Os desenhos (carro, obstáculos, pista) são formas geométricas feitas com o próprio Pygame, e a fonte é a padrão do Pygame. Qualquer imagem, som, fonte, trecho de código ou tutorial usado no futuro será listado aqui com origem e, quando possível, licença.
+
+O arquivo `assets/imagens/spritesheet.bmp` e o módulo `src/sprites.py` vêm do template e não são usados nesta versão.
 
 ## Checklist mínimo para entrega
 
-* [ ] Preencher este README com nome final, descrição real, regras e controles do jogo.
+* [x] Preencher este README com nome final, descrição real, regras e controles do jogo.
 * [x] Atualizar `docs/proposta.md` com a proposta do grupo.
 * [ ] Garantir que o jogo executa com `python main.py`.
 * [ ] Garantir que os testes passam com `pytest`.
