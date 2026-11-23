@@ -1,142 +1,129 @@
 import pygame
 
 from src.config import (
-    LARGURA_TELA,
     ALTURA_TELA,
-    FPS,
-    TITULO_JOGO,
-    CINZA,
+    CAMINHO_CENARIOS,
     CAMINHO_RECORDE,
-    CAMINHO_SPRITES,
+    FPS,
+    LARGURA_TELA,
+    TITULO_JOGO,
+)
+from src.dados import carregar_cenarios, carregar_recorde, salvar_recorde
+from src.interface import (
+    carregar_fontes,
+    desenhar_fim,
+    desenhar_jogo,
+    desenhar_menu,
+    desenhar_pausa,
+)
+from src.partida import (
+    alternar_modo_jogador,
+    atualizar_partida,
+    criar_estado,
+    mover_manual,
 )
 
-from src.funcoes import (
-    calcular_pontos,
-    jogador_perdeu,
-    limitar_valor,
-    verificar_colisao,
-    tomar_dano,
-)
-from src.sprites import pegar_sprite
-from src.dados import (
-    salvar_recorde,
-    carregar_recorde,
-)
+
+def tratar_tecla(tecla, tela_atual, estado):
+    """Reage a uma tecla pressionada.
+
+    Retorna (nova_tela, novo_estado, deve_sair). As telas possíveis são
+    'menu', 'jogando', 'pausado' e 'fim'.
+    """
+    if tecla == pygame.K_ESCAPE:
+        return tela_atual, estado, True
+
+    if tela_atual == "menu":
+        if tecla == pygame.K_RETURN:
+            return "jogando", criar_estado(), False
+
+    elif tela_atual == "jogando":
+        if tecla == pygame.K_SPACE:
+            alternar_modo_jogador(estado)
+        elif tecla == pygame.K_LEFT:
+            mover_manual(estado, -1)
+        elif tecla == pygame.K_RIGHT:
+            mover_manual(estado, 1)
+        elif tecla == pygame.K_p:
+            return "pausado", estado, False
+        elif tecla == pygame.K_r:
+            return "jogando", criar_estado(), False
+
+    elif tela_atual == "pausado":
+        if tecla == pygame.K_p:
+            return "jogando", estado, False
+        if tecla == pygame.K_r:
+            return "jogando", criar_estado(), False
+
+    elif tela_atual == "fim":
+        if tecla in (pygame.K_r, pygame.K_RETURN):
+            return "jogando", criar_estado(), False
+
+    return tela_atual, estado, False
+
+
+def finalizar_partida(estado, recorde):
+    """Atualiza e salva o recorde ao fim da partida; devolve o recorde vigente."""
+    pontos = int(estado["pontos"])
+    if pontos > recorde:
+        recorde = pontos
+        estado["novo_recorde"] = True
+        salvar_recorde(CAMINHO_RECORDE, recorde)
+    return recorde
 
 
 def executar_jogo():
-    """Executa o loop principal do jogo e controla estado, colisões e pontuação."""
+    """Executa o loop principal do jogo: entrada, atualização e desenho."""
     pygame.init()
-    
+
+    cenarios = carregar_cenarios(CAMINHO_CENARIOS)
+    if not cenarios:
+        print(f"Erro: não foi possível carregar os cenários de '{CAMINHO_CENARIOS}'.")
+        pygame.quit()
+        return
 
     tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
     pygame.display.set_caption(TITULO_JOGO)
 
     relogio = pygame.time.Clock()
-    rodando = True
-
-    # 1. Carregando as imagens recortadas do Spritesheet
-
-
-    # Jogador: usando tamanho 110x110 para capturar o quadrado perfeitamente
-    player_image = pegar_sprite(CAMINHO_SPRITES, x=110, y=120, width=190, height=190, scale=0.5)
-
-    # Gema pequena: usando tamanho 64x64
-    gem_image    = pegar_sprite(CAMINHO_SPRITES, x=900, y=690, width=200, height=200, scale=0.5)
-
-    # Morcego: usando tamanho 180x120 por causa das asas abertas
-    bat_image    = pegar_sprite(CAMINHO_SPRITES, x=905, y=1060, width=200, height=130, scale=0.5)
-    
-    # 2. Criando a estrutura de Sprites usando Dicionários
-    jogador = {
-        "imagem": player_image,
-        "rect": player_image.get_rect(topleft=(100, 100))
-    }
-
-    gema = {
-        "imagem": gem_image,
-        "rect": gem_image.get_rect(topleft=(500, 300))
-    }
-    
-    inimigo = {
-        "imagem": bat_image,
-        "rect": bat_image.get_rect(topleft=(200, 500))
-    }
-
-    velocidade = 5
-    pontos = 0
-    vidas = 3
+    fontes = carregar_fontes()
     recorde = carregar_recorde(CAMINHO_RECORDE)
+
+    tela_atual = "menu"
+    estado = criar_estado()
+    rodando = True
 
     # Loop principal: processa entrada, atualiza estado e renderiza a cena.
     while rodando:
-        relogio.tick(FPS)
+        # dt em segundos; o limite evita saltos grandes se a janela travar.
+        dt = min(relogio.tick(FPS) / 1000.0, 0.05)
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 rodando = False
+            elif evento.type == pygame.KEYDOWN:
+                tela_atual, estado, sair = tratar_tecla(evento.key, tela_atual, estado)
+                if sair:
+                    rodando = False
 
-        teclas = pygame.key.get_pressed()
+        if tela_atual == "jogando":
+            atualizar_partida(estado, cenarios, dt)
+            if estado["fim"] is not None:
+                recorde = finalizar_partida(estado, recorde)
+                tela_atual = "fim"
+            pygame.display.set_caption(
+                f"{TITULO_JOGO} | Pontos: {int(estado['pontos'])} | "
+                f"Vidas: {estado['vidas']} | Modo: {estado['modo']}"
+            )
 
-        # Movimentação alterando direto os eixos X e Y do retângulo do jogador
-        if teclas[pygame.K_LEFT]:
-            jogador["rect"].x -= velocidade
-        if teclas[pygame.K_RIGHT]:
-            jogador["rect"].x += velocidade
-        if teclas[pygame.K_UP]:
-            jogador["rect"].y -= velocidade
-        if teclas[pygame.K_DOWN]:
-            jogador["rect"].y += velocidade
-
-        # Limitando o jogador dentro das bordas da tela usando as propriedades do Rect
-        jogador["rect"].x = limitar_valor(jogador["rect"].x, 0, LARGURA_TELA - jogador["rect"].width)
-        jogador["rect"].y = limitar_valor(jogador["rect"].y, 0, ALTURA_TELA - jogador["rect"].height)
-
-        # Verificação de colisão com a Gema (antigo 'item')
-        if verificar_colisao(jogador["rect"], gema["rect"]):
-            pontos = calcular_pontos(pontos, 10)
-
-            # Move a gema de lugar ao coletar
-            gema["rect"].x += 80
-            gema["rect"].y += 50
-
-            # Se a gema sair da tela, volta para uma posição segura
-            if gema["rect"].x > LARGURA_TELA - gema["rect"].width:
-                gema["rect"].x = 50
-            if gema["rect"].y > ALTURA_TELA - gema["rect"].height:
-                gema["rect"].y = 50
-
-        # Verificação de colisão com o Inimigo
-        if verificar_colisao(jogador["rect"], inimigo["rect"]):
-            vidas = tomar_dano(vidas, 1)
-
-            # Afasta o inimigo ao colidir
-            inimigo["rect"].x += 80
-            inimigo["rect"].y += 50
-
-            if inimigo["rect"].x > LARGURA_TELA - inimigo["rect"].width:
-                inimigo["rect"].x = 50
-            if inimigo["rect"].y > ALTURA_TELA - inimigo["rect"].height:
-                inimigo["rect"].y = 50
-
-        # Regras de fim de jogo e recorde
-        if jogador_perdeu(vidas):
-            rodando = False
-
-        if pontos > recorde:
-            recorde = pontos
-            salvar_recorde(CAMINHO_RECORDE, recorde)
-
-        pygame.display.set_caption(
-            f"{TITULO_JOGO} | Pontos: {pontos} | Recorde: {recorde} | Vidas: {vidas}"
-        )
-
-        tela.fill(CINZA)
-
-        # Desenhando os elementos na tela passando a imagem e o rect de cada dicionário
-        tela.blit(gema["imagem"], gema["rect"])
-        tela.blit(inimigo["imagem"], inimigo["rect"])
-        tela.blit(jogador["imagem"], jogador["rect"])
+        if tela_atual == "menu":
+            desenhar_menu(tela, fontes, recorde)
+        elif tela_atual == "jogando":
+            desenhar_jogo(tela, estado, fontes, recorde)
+        elif tela_atual == "pausado":
+            desenhar_pausa(tela, estado, fontes, recorde)
+        elif tela_atual == "fim":
+            desenhar_fim(tela, estado, fontes, recorde)
 
         pygame.display.flip()
 
