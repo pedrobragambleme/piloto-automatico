@@ -4,7 +4,9 @@ Esta pasta contem testes automatizados do projeto.
 
 ## Arquivos
 
-- `test_logica.py`: valida funcoes puras de logica em `src/funcoes.py`.
+- `test_logica.py`: funcoes puras de logica em `src/funcoes.py` (colisao, pontos, nivel, fim de jogo, piloto automatico).
+- `test_dados.py`: recorde e leitura dos cenarios (`data/cenarios.json`).
+- `test_partida.py`: partidas simuladas em `src/partida.py` (IA desviando, IA batendo, intervencoes do jogador, vitoria e derrota).
 
 ## Como executar
 
@@ -15,4 +17,4 @@ python -m pytest
 ## Boas praticas
 
 - Crie testes para toda regra de pontuacao, vidas e condicoes de fim de jogo.
-- Prefira funcoes pequenas e testaveis no modulo `src/funcoes.py`.
+- Prefira funcoes pequenas e testaveis, sem depender do Pygame.
