@@ -13,6 +13,7 @@ Nome: Piloto Automático
 2. Integrantes do grupo
 Nome 1: Pedro Braga Morgan Bleme - 935798
 Nome 2: Matheus Fernandes de Oliveira - 932354
+Nome 3: Thiago Lorenzo - 
 
 3. Tema escolhido
 
@@ -100,16 +101,19 @@ Melhoria 3: Ranking com os cinco melhores resultados e resumo dos tipos de situa
 15. Informações complementares (exigidas pelo Ponto de controle 01)
 Organização inicial do código
 
-O projeto será desenvolvido sobre o template da disciplina, mantendo sua estrutura de pastas. Módulos previstos (os nomes serão adaptados ao template):
+O projeto foi desenvolvido sobre o template da disciplina, mantendo sua estrutura de pastas. Módulos (atualizados na Entrega 2; os nomes foram adaptados ao template):
 
-main.py: loop principal e controle de telas.
-src/logica.py: regras puras (colisão, pontuação, nível, vitória e derrota).
-src/piloto.py: simulação do piloto automático e da confiança da IA.
-src/obstaculos.py: criação e sorteio de obstáculos.
-src/interface.py: desenho de pista, carro, painel e telas.
-src/arquivos.py: leitura e escrita de recorde e cenários.
+main.py: ponto de entrada do jogo.
+src/jogo.py: loop principal, entrada do teclado e controle de telas (menu, jogo, pausa, fim).
+src/partida.py: estado da partida e regras por quadro (obstáculos, piloto automático, colisões, pontuação).
+src/funcoes.py: funções puras de lógica (colisão, pontos, nível, vitória/derrota, escolha de faixa, confiança da IA).
+src/obstaculos.py: criação e consulta de obstáculos.
+src/interface.py: desenho de pista, carro, obstáculos, painel e telas.
+src/dados.py: leitura e escrita de recorde e leitura dos cenários (JSON).
+src/config.py: constantes do jogo (tela, pista, regras, pesos de condição).
 data/cenarios.json e data/recorde.txt: arquivos auxiliares.
-tests/test_logica.py: testes das funções de lógica.
+tests/test_logica.py, tests/test_dados.py e tests/test_partida.py: testes das funções de lógica, dos arquivos e de partidas simuladas.
+
 Estruturas de dados
 Dicionários: cada obstáculo (tipo, condicao, ia_detecta, explicacao) e o estado do jogo (vidas, distância, pontos, modo, nível).
 Listas: obstáculos ativos na pista e tipos de obstáculo disponíveis.
@@ -120,18 +124,18 @@ Leitura de data/cenarios.json com os tipos de obstáculos, condições e explica
 Leitura e escrita de data/recorde.txt para salvar a melhor pontuação. Se o arquivo não existir, o recorde começa em 0.
 Funções principais previstas
 
-carregar_cenarios, criar_obstaculo, ia_desvia, calcular_confianca, houve_colisao, calcular_pontos, atualizar_nivel, verificar_fim, ler_recorde, salvar_recorde, desenhar_hud e desenhar_pista.
+carregar_cenarios, criar_obstaculo, ia_desvia, calcular_confianca, houve_colisao, faixa_livre_mais_proxima, avaliar_passagem, pontos_por_distancia, pontos_por_evento, calcular_nivel, verificar_fim, carregar_recorde, salvar_recorde, desenhar_painel e desenhar_pista.
 
 Testes planejados
 
-Testes simples em tests/test_logica.py para:
+Testes simples em tests/ para:
 
 ia_desvia: verdadeiro para obstáculo detectável e falso para não detectável.
 houve_colisao: detecta sobreposição e ausência dela.
-calcular_pontos: bônus por desvio manual e penalidade por intervenção desnecessária.
-atualizar_nivel: sobe de nível nas distâncias esperadas.
+pontos_por_evento: bônus por intervenção correta e penalidade por intervenção desnecessária.
+calcular_nivel: sobe de nível nas distâncias esperadas.
 verificar_fim: detecta vitória (1000 m) e derrota (0 vidas).
-ler_recorde: retorna 0 quando o arquivo não existe.
+carregar_recorde: retorna 0 quando o arquivo não existe.
 Recursos necessários
 
 Python 3 e Pygame, formas geométricas e fontes padrão do Pygame. Os textos dos cenários serão escritos pelo grupo. Qualquer imagem, som, fonte ou código externo será listado no README com origem e licença.
@@ -139,3 +143,6 @@ Python 3 e Pygame, formas geométricas e fontes padrão do Pygame. Os textos dos
 Declaração de originalidade
 
 Declaramos que a ideia, as regras, os textos dos cenários e o código deste jogo serão desenvolvidos pelo grupo especificamente para esta disciplina e não reaproveitam jogos de semestres anteriores. Qualquer recurso externo será identificado no README.md com sua origem e, quando possível, licença. Todos os integrantes saberão explicar as partes em que trabalharam.
+
+Atualização da Entrega 2
+Mudanças em relação à proposta inicial: (1) os módulos seguem os nomes do template (funcoes.py, dados.py e jogo.py) e foram acrescentados partida.py, obstaculos.py e interface.py; (2) a condição da pista (normal, chuva, neblina, noite) muda a cada 100 m e define quais obstáculos surgem, com 15 cenários no data/cenarios.json; (3) uma intervenção é avaliada como correta quando o jogador estava no modo manual diante de um obstáculo que a IA não detectava (+20), e como desnecessária quando a IA já detectava (-10); (4) a IA só muda para uma faixa se o caminho até ela estiver livre. O escopo e as regras principais continuam os mesmos.
