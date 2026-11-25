@@ -57,11 +57,11 @@ VIDAS_INICIAIS = 3
 DISTANCIA_VITORIA = 1000        # metros para vencer
 METROS_POR_NIVEL = 250
 NIVEL_MAXIMO = 4
-VELOCIDADE_BASE = 13            # metros por segundo no nível 1
+VELOCIDADE_BASE = 16            # metros por segundo no nível 1
 ACRESCIMO_VELOCIDADE = 4        # metros por segundo a mais a cada nível
 PIXELS_POR_METRO = 8
 
-INTERVALO_OBSTACULOS_BASE = 40  # metros entre obstáculos no nível 1
+INTERVALO_OBSTACULOS_BASE = 34  # metros entre obstáculos no nível 1
 REDUCAO_INTERVALO_NIVEL = 3     # reduz o intervalo a cada nível
 TRECHO_METROS = 100             # a condição da pista pode mudar a cada trecho
 
