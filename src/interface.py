@@ -3,6 +3,7 @@
 import pygame
 
 from src.config import (
+    ALCANCE_IA,
     ALTURA_TELA,
     AMARELO,
     ASFALTO,
@@ -32,8 +33,8 @@ from src.config import (
     VERMELHO,
     VIDAS_INICIAIS,
 )
-from src.funcoes import calcular_confianca, x_da_faixa
-from src.obstaculos import proximo_obstaculo_na_faixa
+from src.funcoes import calcular_confianca, ia_desvia, visibilidade_ia, x_da_faixa
+from src.obstaculos import no_alcance_da_ia, proximo_obstaculo_na_faixa
 
 LARGURA_PAINEL = LARGURA_TELA - PAINEL_X - 12
 
@@ -104,9 +105,9 @@ def _camada(condicao):
         return None
     if condicao not in _CAMADAS:
         cores = {
-            "chuva": (50, 80, 130, 80),
-            "neblina": (215, 220, 228, 130),
-            "noite": (5, 8, 30, 150),
+            "chuva": (50, 80, 130, 70),
+            "neblina": (215, 220, 228, 105),
+            "noite": (5, 8, 30, 120),
         }
         camada = pygame.Surface((PISTA_LARGURA, ALTURA_TELA), pygame.SRCALPHA)
         camada.fill(cores[condicao])
@@ -195,6 +196,32 @@ def desenhar_efeito_chuva(tela, estado):
         pygame.draw.line(tela, (170, 195, 235), (x, y), (x - 4, y + 14), 1)
 
 
+def desenhar_quadros_ia(tela, estado, fontes):
+    """Mostra na pista o que a IA enxerga.
+
+    Obstáculo com quadro verde = a IA o detectou e vai desviar.
+    Obstáculo sem quadro = a IA não o viu (o jogador precisa assumir).
+    """
+    y_alcance = CARRO_Y - ALCANCE_IA
+    for x in range(PISTA_X, PISTA_X + PISTA_LARGURA, 24):
+        pygame.draw.line(tela, VERDE, (x, y_alcance), (x + 10, y_alcance), 2)
+    escrever(tela, "alcance da câmera da IA", fontes["pequena"], VERDE,
+             PISTA_X + 6, y_alcance + 4)
+
+    for obstaculo in estado["obstaculos"]:
+        if not (ia_desvia(obstaculo) and no_alcance_da_ia(obstaculo)):
+            continue
+        x = x_da_faixa(obstaculo["faixa"], OBST_LARGURA)
+        y = int(obstaculo["y"])
+        pygame.draw.rect(tela, VERDE, _retangulo(x - 3, y - 3, OBST_LARGURA + 6, OBST_ALTURA + 6),
+                         3, border_radius=6)
+        rotulo = "IA detectou"
+        largura_rotulo = fontes["pequena"].size(rotulo)[0] + 10
+        pygame.draw.rect(tela, FUNDO_PAINEL,
+                         _retangulo(x - 3, y - 22, largura_rotulo, 18), border_radius=4)
+        escrever(tela, rotulo, fontes["pequena"], VERDE, x + 2, y - 20)
+
+
 # ---------------------------------------------------------------- Painel lateral
 def _desenhar_caixa(tela, x, y, largura, altura, cor=FUNDO_CAIXA):
     pygame.draw.rect(tela, cor, _retangulo(x, y, largura, altura), border_radius=8)
@@ -246,27 +273,42 @@ def desenhar_painel(tela, estado, fontes, recorde):
     escrever(tela, f"Pista: {condicao.upper()}", fontes["media"],
              CORES_CONDICAO[condicao], x + 110, 198)
 
-    _desenhar_leitura_ia(tela, estado, fontes, x, 228, largura)
-    _desenhar_mensagem(tela, estado, fontes, x, 338, largura, 222)
+    qualidade = visibilidade_ia(condicao)
+    cor_visao = {"BOA": VERDE, "REDUZIDA": AMARELO, "BAIXA": VERMELHO}[qualidade]
+    escrever(tela, f"Visibilidade da IA: {qualidade}", fontes["media"], cor_visao, x, 226)
 
-    escrever(tela, "ESPAÇO modo | SETAS faixa | P pausa", fontes["pequena"], CINZA, x, 572)
+    _desenhar_leitura_ia(tela, estado, fontes, x, 254, largura)
+    _desenhar_mensagem(tela, estado, fontes, x, 364, largura, 168)
+
+    escrever(tela, "Quadro verde na pista = a IA detectou", fontes["pequena"], VERDE, x, 542)
+    escrever(tela, "Sem quadro = a IA NÃO viu o obstáculo", fontes["pequena"], AMARELO, x, 560)
+    escrever(tela, "ESPAÇO modo | SETAS faixa | P pausa", fontes["pequena"], CINZA, x, 578)
 
 
 def _desenhar_leitura_ia(tela, estado, fontes, x, y, largura):
-    """Mostra o que a IA 'acha' que está à frente e o quanto confia nisso."""
-    _desenhar_caixa(tela, x, y, largura, 100)
-    escrever(tela, "Leitura da IA (faixa atual)", fontes["pequena"], CINZA, x + 10, y + 8)
+    """Mostra o que a IA 'acha' que está à frente na faixa do carro e o quanto confia nisso."""
+    _desenhar_caixa(tela, x, y, largura, 102)
+    escrever(tela, "Leitura da IA na sua faixa", fontes["pequena"], CINZA, x + 10, y + 8)
 
     obstaculo = proximo_obstaculo_na_faixa(estado["obstaculos"], estado["faixa"])
+    if obstaculo is not None and not no_alcance_da_ia(obstaculo):
+        obstaculo = None  # ainda longe demais para a câmera da IA
+
     if obstaculo is None:
         confianca, motivo = 97, "Pista livre"
+        status, cor_status = "PISTA LIVRE", VERDE
     else:
         confianca, motivo = calcular_confianca(obstaculo)
+        if ia_desvia(obstaculo):
+            status, cor_status = "OBSTÁCULO DETECTADO", VERDE
+        else:
+            status, cor_status = "PISTA LIVRE", VERDE
 
     cor = VERDE if confianca >= 80 else (AMARELO if confianca >= 60 else VERMELHO)
-    escrever(tela, f"{confianca}%", fontes["grande"], cor, x + 10, y + 28)
-    _desenhar_barra(tela, x + 80, y + 36, largura - 95, 12, confianca / 100, cor)
-    escrever_paragrafo(tela, motivo, fontes["pequena"], BRANCO, x + 10, y + 64, largura - 20)
+    escrever(tela, status, fontes["media"], cor_status, x + 10, y + 28)
+    escrever(tela, f"Confiança {confianca}%", fontes["pequena"], cor, x + 10, y + 54)
+    _desenhar_barra(tela, x + 140, y + 56, largura - 155, 10, confianca / 100, cor)
+    escrever_paragrafo(tela, motivo, fontes["pequena"], BRANCO, x + 10, y + 76, largura - 20)
 
 
 def _desenhar_mensagem(tela, estado, fontes, x, y, largura, altura):
@@ -275,9 +317,8 @@ def _desenhar_mensagem(tela, estado, fontes, x, y, largura, altura):
     mensagem = estado["mensagem"]
     if mensagem is None:
         escrever(tela, "Dica", fontes["media"], AMARELO, x + 10, y + 10)
-        dica = ("Observe a pista e o painel. A IA pode estar muito confiante e mesmo "
-                "assim não ter visto o obstáculo. Assuma o controle quando o contexto "
-                "indicar risco e volte ao automático depois.")
+        dica = ("Olhe a pista: se há um obstáculo na sua faixa e ele NÃO tem quadro "
+                "verde, a IA não o viu, mesmo com confiança alta. Aperte ESPAÇO e desvie.")
         escrever_paragrafo(tela, dica, fontes["pequena"], BRANCO, x + 10, y + 38, largura - 20)
         return
 
@@ -300,6 +341,7 @@ def desenhar_jogo(tela, estado, fontes, recorde):
     if estado["condicao"] == "chuva":
         desenhar_efeito_chuva(tela, estado)
 
+    desenhar_quadros_ia(tela, estado, fontes)
     desenhar_carro(tela, estado)
     desenhar_painel(tela, estado, fontes, recorde)
 
@@ -321,8 +363,10 @@ def desenhar_menu(tela, fontes, recorde):
     linhas = [
         "O carro autônomo dirige sozinho, mas a IA não enxerga tudo:",
         "neblina, chuva, noite e objetos raros podem enganar o sistema.",
-        "Observe a pista e a leitura da IA. Assuma o controle quando houver risco",
-        "e volte ao automático quando a pista estiver segura.",
+        "",
+        "Quadro VERDE sobre o obstáculo = a IA detectou e vai desviar.",
+        "SEM quadro = a IA não viu. Aperte ESPAÇO e desvie você!",
+        "Depois volte ao automático: no manual você ganha menos pontos.",
         "",
         "Chegue a 1000 m sem perder as 3 vidas.",
     ]
@@ -336,13 +380,13 @@ def desenhar_menu(tela, fontes, recorde):
         "SETAS esquerda/direita: trocar de faixa (modo manual)",
         "P: pausar    R: reiniciar    ESC: sair",
     ]
-    y = 340
+    y = 385
     for linha in controles:
         escrever(tela, linha, fontes["media"], CINZA, centro, y, True)
         y += 28
 
-    escrever(tela, "Pressione ENTER para começar", fontes["grande"], VERDE, centro, 460, True)
-    escrever(tela, f"Recorde: {recorde}", fontes["media"], CINZA, centro, 520, True)
+    escrever(tela, "Pressione ENTER para começar", fontes["grande"], VERDE, centro, 490, True)
+    escrever(tela, f"Recorde: {recorde}", fontes["media"], CINZA, centro, 545, True)
 
 
 def desenhar_pausa(tela, estado, fontes, recorde):
