@@ -20,6 +20,7 @@ from src.config import (
     PONTOS_POR_METRO_MANUAL,
     REDUCAO_INTERVALO_NIVEL,
     VELOCIDADE_BASE,
+    VISIBILIDADE_IA,
 )
 
 # Campos obrigatórios de cada cenário (obstáculo) em data/cenarios.json.
@@ -130,6 +131,11 @@ def calcular_confianca(obstaculo):
     confianca = limitar_valor(int(obstaculo.get("confianca", 0)), 0, 100)
     motivo = obstaculo.get("motivo", "Sem informação")
     return confianca, motivo
+
+
+def visibilidade_ia(condicao):
+    """Qualidade da visão da IA ('BOA', 'REDUZIDA' ou 'BAIXA') na condição da pista."""
+    return VISIBILIDADE_IA.get(condicao, "BOA")
 
 
 def faixa_livre_mais_proxima(faixa_atual, faixas_ocupadas, total_faixas=NUM_FAIXAS):

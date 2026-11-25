@@ -1,6 +1,7 @@
 """Criação e consulta de obstáculos (sem dependência do Pygame)."""
 
 from src.config import (
+    ALCANCE_IA,
     CARRO_ALTURA,
     CARRO_LARGURA,
     CARRO_Y,
@@ -44,6 +45,11 @@ def retangulo_carro(x):
 def entrou_na_zona(obstaculo):
     """Verdadeiro quando o obstáculo chegou à zona em que a IA reage."""
     return obstaculo["y"] + OBST_ALTURA >= CARRO_Y - ZONA_REACAO
+
+
+def no_alcance_da_ia(obstaculo):
+    """Verdadeiro quando o obstáculo já está dentro do alcance da câmera da IA."""
+    return obstaculo["y"] + OBST_ALTURA >= CARRO_Y - ALCANCE_IA and not passou_do_carro(obstaculo)
 
 
 def passou_do_carro(obstaculo):

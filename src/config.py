@@ -47,6 +47,8 @@ OBST_ALTURA = 76
 
 # Distância (em pixels) antes do carro em que a IA "reage" a um obstáculo.
 ZONA_REACAO = 170
+# Alcance da "câmera" da IA: a partir daqui o painel mostra o que ela detectou.
+ALCANCE_IA = 340
 # Velocidade com que o carro troca de faixa (pixels por segundo).
 VELOCIDADE_TROCA_FAIXA = 900
 
@@ -75,6 +77,14 @@ TEMPO_MENSAGEM = 5.0            # segundos que a mensagem educativa fica na tela
 MODOS = {"auto", "manual"}
 CONDICOES = ("normal", "chuva", "neblina", "noite")
 FORMAS = ("cone", "carro", "pessoa", "placa", "caixa", "animal")
+
+# Qualidade da visão da IA em cada condição da pista.
+VISIBILIDADE_IA = {
+    "normal": "BOA",
+    "chuva": "REDUZIDA",
+    "neblina": "BAIXA",
+    "noite": "BAIXA",
+}
 
 # Probabilidade (peso) de cada condição de pista por nível.
 PESOS_CONDICAO = {
