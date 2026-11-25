@@ -1,5 +1,7 @@
 # Configurações centrais do jogo (tela, cores, pista, regras e caminhos de arquivos).
 
+import os
+
 # ---------------------------------------------------------------- Tela
 LARGURA_TELA = 800
 ALTURA_TELA = 600
@@ -23,9 +25,11 @@ AZUL = (70, 150, 235)
 LARANJA = (240, 140, 50)
 
 # ---------------------------------------------------------------- Arquivos
-CAMINHO_RECORDE = "data/recorde.txt"
-CAMINHO_CENARIOS = "data/cenarios.json"
-CAMINHO_SPRITES = "assets/imagens/spritesheet.bmp"
+# Os caminhos partem da pasta do projeto, então o jogo funciona de qualquer pasta.
+RAIZ_PROJETO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CAMINHO_RECORDE = os.path.join(RAIZ_PROJETO, "data", "recorde.txt")
+CAMINHO_CENARIOS = os.path.join(RAIZ_PROJETO, "data", "cenarios.json")
+CAMINHO_SPRITES = os.path.join(RAIZ_PROJETO, "assets", "imagens", "spritesheet.bmp")
 
 # ---------------------------------------------------------------- Pista (pixels)
 NUM_FAIXAS = 3
