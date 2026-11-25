@@ -15,6 +15,7 @@ from src.funcoes import (
     sortear_condicao,
     velocidade_do_nivel,
     verificar_fim,
+    visibilidade_ia,
 )
 
 
@@ -226,3 +227,17 @@ def test_cenario_invalido_com_cor_errada():
     cenario = _cenario_base()
     cenario["cor"] = [300, 0, 0]
     assert cenario_valido(cenario) is False
+
+
+# ---------------------------------------------------------------- Visibilidade da IA
+def test_visibilidade_da_ia_por_condicao():
+    """A pista normal dá boa visão à IA; chuva reduz; neblina e noite pioram."""
+    assert visibilidade_ia("normal") == "BOA"
+    assert visibilidade_ia("chuva") == "REDUZIDA"
+    assert visibilidade_ia("neblina") == "BAIXA"
+    assert visibilidade_ia("noite") == "BAIXA"
+
+
+def test_visibilidade_da_ia_condicao_desconhecida_vira_boa():
+    """Uma condição fora da lista não quebra o jogo."""
+    assert visibilidade_ia("granizo") == "BOA"
