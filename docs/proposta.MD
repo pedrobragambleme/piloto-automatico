@@ -12,8 +12,7 @@ Nome: Piloto Automático
 
 2. Integrantes do grupo
 Nome 1: Pedro Braga Morgan Bleme - 935798
-Nome 2: Matheus Fernandes de Oliveira - 932354
-Nome 3: Thiago Lorenzo - 
+Nome 2: Thiago Lorenzo - 878677
 
 3. Tema escolhido
 
@@ -146,3 +145,12 @@ Declaramos que a ideia, as regras, os textos dos cenários e o código deste jog
 
 Atualização da Entrega 2
 Mudanças em relação à proposta inicial: (1) os módulos seguem os nomes do template (funcoes.py, dados.py e jogo.py) e foram acrescentados partida.py, obstaculos.py e interface.py; (2) a condição da pista (normal, chuva, neblina, noite) muda a cada 100 m e define quais obstáculos surgem, com 15 cenários no data/cenarios.json; (3) uma intervenção é avaliada como correta quando o jogador estava no modo manual diante de um obstáculo que a IA não detectava (+20), e como desnecessária quando a IA já detectava (-10); (4) a IA só muda para uma faixa se o caminho até ela estiver livre. O escopo e as regras principais continuam os mesmos.
+
+Atualização da Entrega 3
+Versão final do jogo. O grupo final é formado por Pedro Braga Morgan Bleme e Thiago Lorenzo. Mudanças e resultados em relação à proposta e à Entrega 2: (1) a IA passou a mostrar o que enxerga: um quadro verde com o texto "IA detectou" aparece sobre cada obstáculo detectado, e obstáculo sem quadro é um obstáculo que a IA não viu; uma linha pontilhada marca o alcance da câmera da IA e o painel mostra a visibilidade da IA (boa, reduzida ou baixa) conforme a condição da pista; (2) o painel ganhou legenda fixa e o menu inicial explica o quadro verde; (3) a dificuldade foi ajustada após testes de jogo (velocidade, intervalo entre obstáculos e efeitos de chuva, neblina e noite); (4) os caminhos dos arquivos passaram a partir da pasta do projeto, e o jogo funciona de qualquer pasta; (5) a suíte de testes chegou a 63 testes de lógica, incluindo partidas simuladas, leitura de arquivos, alcance e visibilidade da IA.
+
+Escopo entregue: tela principal, controle do carro, mecânica central de supervisionar o piloto automático, vidas, pontos, distância, nível e recorde, vitória aos 1000 m e derrota sem vidas, 15 cenários em arquivo JSON, mensagens educativas após colisões e intervenções, menu, pausa e tela final. A integração com o tema é verificável na jogabilidade: a IA só desvia do que detecta, a condição da pista muda o que ela enxerga, a confiança mostrada pode estar alta mesmo quando ela erra, e o jogador ganha ou perde pontos conforme intervém no momento certo ou não.
+
+Melhorias possíveis: sons e imagens autorais, mais cenários e condições de pista, ranking com várias pontuações e dificuldade selecionável no menu.
+
+Recursos externos: Pygame, pytest e o template da disciplina, além do assistente de IA Claude (Anthropic), usado como apoio de programação. Todos estão identificados no README.md, com origem e licença. O grupo testou o jogo e revisou o código, e todos os integrantes devem saber explicar as partes do projeto.
